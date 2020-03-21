@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Zwyssigly.Functional</RootNamespace>
+    <LangVersion>8</LangVersion>
+    <Version>0.0.1</Version>
+    <Authors>Zwyssigly</Authors>
+    <Company />
+    <Copyright>Apache License 2.0</Copyright>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageProjectUrl>https://github.com/Zwyssigly/Zwyssigly.Functional</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/Zwyssigly/Zwyssigly.Functional</RepositoryUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+</Project>
