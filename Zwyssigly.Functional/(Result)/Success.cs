@@ -1,9 +1,9 @@
 ﻿namespace Zwyssigly.Functional
 {
-    public class Success<TOk>
+    public class Success<T>
     {
-        public readonly TOk Value;
+        public readonly T Value;
 
-        public Success(TOk value) => Value = value;
+        internal Success(T value) => Value = value;
     }
 }

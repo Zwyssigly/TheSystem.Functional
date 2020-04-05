@@ -2,98 +2,99 @@
 
 namespace Zwyssigly.Functional
 {
-    public class Result<TOk, TErr>
+    public class Result<TSuccess, TFailure>
     {
-        private readonly TOk _ok;
-        private readonly TErr _err;
-        private readonly bool _isOk;
+        private readonly TSuccess _success;
+        private readonly TFailure _failure;
+        private readonly bool _isSuccess;
 
-        public Option<TOk> Ok => Match(Option.Some, _ => None.Value);
-        public Option<TErr> Err => Match(_ => None.Value, Option.Some);
+        public Option<TSuccess> Success => Match(Option.Some, _ => None.Value);
+        public Option<TFailure> Failure => Match(_ => None.Value, Option.Some);
 
-        public bool IsOk => _isOk;
-        public bool IsErr => !_isOk;
+        public bool IsSuccess => _isSuccess;
+        public bool IsFailure => !_isSuccess;
 
-        private Result(TOk ok, TErr err, bool isOk)
+        private Result(TSuccess success, TFailure failure, bool isSuccess)
         {
-            _isOk = isOk;
+            _isSuccess = isSuccess;
 
-            if (_isOk) _ok = ok;
-            else _err = err;
+            if (_isSuccess) _success = success;
+            else _failure = failure;
         }
 
-        internal static Result<TOk, TErr> Success(TOk ok)
+        internal static Result<TSuccess, TFailure> FromSuccess(TSuccess success)
         {
-            return new Result<TOk, TErr>(ok, default, true);
+            return new Result<TSuccess, TFailure>(success, default, true);
         }
 
-        internal static Result<TOk, TErr> Failure(TErr err)
+        internal static Result<TSuccess, TFailure> FromFailure(TFailure failure)
         {
-            return new Result<TOk, TErr>(default, err, false);
+            return new Result<TSuccess, TFailure>(default, failure, false);
         }
 
-        public TResult Match<TResult>(Func<TOk, TResult> ok, Func<TErr, TResult> err)
+        public TResult Match<TResult>(Func<TSuccess, TResult> onSuccess, Func<TFailure, TResult> onFailure)
         {
-            return _isOk
-                ? ok(_ok)
-                : err(_err);
+            return _isSuccess
+                ? onSuccess(_success)
+                : onFailure(_failure);
         }
 
-        public void Match(Action<TOk> ok, Action<TErr> err)
+        public void Match(Action<TSuccess> onSuccess, Action<TFailure> onFailure)
         {
-            if (_isOk) ok(_ok);
-            else err(_err);
+            if (_isSuccess) onSuccess(_success);
+            else onFailure(_failure);
         }
 
-        public Result<TResult, TErr> MapOk<TResult>(Func<TOk, TResult> ok)
+        public Result<TResult, TFailure> MapSuccess<TResult>(Func<TSuccess, TResult> onSuccess)
         {
             return Match(
-                ok2 => Result<TResult, TErr>.Success(ok(ok2)),
-                err => Result<TResult, TErr>.Failure(err));
+                success => Result<TResult, TFailure>.FromSuccess(onSuccess(success)),
+                failure => Result<TResult, TFailure>.FromFailure(failure));
         }
 
-        public TOk UnwrapOrThrow()
+        public TSuccess UnwrapOrThrow()
         {
-            return Match(ok => ok, err => throw new UnwrapException(err.ToString()));
+            return Match(success => success, failure => throw new UnwrapException(failure.ToString()));
         }
 
-        public Result<TResult, TErr> AndThen<TResult>(Func<TOk, Result<TResult, TErr>> ok)
+        public Result<TResult, TFailure> AndThen<TResult>(Func<TSuccess, Result<TResult, TFailure>> onSuccess)
         {
-            return Match(o => ok(o), err => Result<TResult, TErr>.Failure(err));
+            return Match(s => onSuccess(s), f => Result<TResult, TFailure>.FromFailure(f));
         }
 
-        public static implicit operator Result<TOk, TErr>(Success<TOk> ok)
+        public static implicit operator Result<TSuccess, TFailure>(Success<TSuccess> success)
         {
-            return Success(ok.Value);
+            return FromSuccess(success.Value);
         }
 
-        public static implicit operator Result<TOk, TErr>(Failure<TErr> err)
+        public static implicit operator Result<TSuccess, TFailure>(Failure<TFailure> failure)
         {
-            return Failure(err.Value);
+            return FromFailure(failure.Value);
         }
 
-        public void IfOk(Action<TOk> ok) => Match(ok2 => ok(ok2), _ => { });
-        public void IfErr(Action<TErr> err) => Match(_ => { }, err2 => err(err2));
+        public void IfSuccess(Action<TSuccess> onSuccess) => Match(success => onSuccess(success), _ => { });
+        public void IfFailure(Action<TFailure> onFailure) => Match(_ => { }, failure => onFailure(failure));
     }
 
     public static class Result
     {
-        private static readonly Success<Unit> _unitSuccess = new Success<Unit>(Zwyssigly.Functional.Unit.Value);
+        private static readonly Success<Unit> _unitSuccess = new Success<Unit>(Functional.Unit.Value);
 
-        public static Success<TOk> Success<TOk>(TOk ok)
-            => new Success<TOk>(ok);
+        public static Success<TSuccess> Success<TSuccess>(TSuccess success)
+            => new Success<TSuccess>(success);
 
-        public static Result<TOk, TErr> Success<TOk, TErr>(TOk ok)
-            => Result<TOk, TErr>.Success(ok);
+        public static Result<TSuccess, TFailure> Success<TSuccess, TFailure>(TSuccess success)
+            => Result<TSuccess, TFailure>.FromSuccess(success);
 
-        public static Failure<TErr> Failure<TErr>(TErr err)
-            => new Failure<TErr>(err);
+        public static Failure<TFailure> Failure<TFailure>(TFailure failure)
+            => new Failure<TFailure>(failure);
 
-        public static Result<TOk, TErr> Failure<TOk, TErr>(TErr err)
-            => Result<TOk, TErr>.Failure(err);
+        public static Result<TSuccess, TFailure> Failure<TSuccess, TFailure>(TFailure failure)
+            => Result<TSuccess, TFailure>.FromFailure(failure);
 
         public static Success<Unit> Unit() => _unitSuccess;
 
-        public static Result<Unit, TErr> Unit<TErr>() => Result<Unit, TErr>.Success(Zwyssigly.Functional.Unit.Value);
+        public static Result<Unit, TFailure> Unit<TFailure>() => 
+            Result<Unit, TFailure>.FromSuccess(Functional.Unit.Value);
     }
 }

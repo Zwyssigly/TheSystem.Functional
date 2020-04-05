@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Zwyssigly.Functional
 {
@@ -25,20 +23,20 @@ namespace Zwyssigly.Functional
             _discriminant = Discriminant.B;
         }
 
-        public TResult Match<TResult>(Func<TA, TResult> a, Func<TB, TResult> b)
+        public TResult Match<TResult>(Func<TA, TResult> onA, Func<TB, TResult> onB)
             => _discriminant switch
             {
-                Discriminant.A => a(_a),
-                Discriminant.B => b(_b),
+                Discriminant.A => onA(_a),
+                Discriminant.B => onB(_b),
                 _ => throw new InvalidOperationException()
             };
 
-        public void Match(Action<TA> a, Action<TB> b)
+        public void Match(Action<TA> onA, Action<TB> onB)
         {
             switch (_discriminant)
             {
-                case Discriminant.A: a(_a); break;
-                case Discriminant.B: b(_b); break;
+                case Discriminant.A: onA(_a); break;
+                case Discriminant.B: onB(_b); break;
             }
         }
 

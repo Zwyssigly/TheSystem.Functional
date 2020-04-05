@@ -1,9 +1,9 @@
 ﻿namespace Zwyssigly.Functional
 {
-    public class Failure<TErr>
+    public class Failure<T>
     {
-        public readonly TErr Value;
+        public readonly T Value;
 
-        public Failure(TErr value) => Value = value;
+        internal Failure(T value) => Value = value;
     }
 }
