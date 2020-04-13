@@ -24,6 +24,11 @@ namespace Zwyssigly.Functional
                 : Option.None<T>();
         }
 
+        public static IEnumerable<T> SelectSome<T>(this IEnumerable<Option<T>> self)
+        {
+            return self.Where(s => s.IsSome).Select(s => s.UnwrapOrThrow());
+        }
+
         public static Option<T> SingleOrNone<T>(this IEnumerable<T> self)
         {
             var array = self.Take(2).ToArray();
