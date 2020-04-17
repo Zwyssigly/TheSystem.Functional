@@ -57,6 +57,11 @@ namespace Zwyssigly.Functional
             return Match(success => success, failure => throw new UnwrapException(failure.ToString()));
         }
 
+        public TSuccess UnwrapOr(Func<TFailure, TSuccess> onFailure)
+        {
+            return Match(success => success, failure => onFailure(failure));
+        }
+
         public Result<TResult, TFailure> AndThen<TResult>(Func<TSuccess, Result<TResult, TFailure>> onSuccess)
         {
             return Match(s => onSuccess(s), f => Result<TResult, TFailure>.FromFailure(f));

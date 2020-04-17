@@ -5,6 +5,17 @@ namespace Zwyssigly.Functional
 {
     public static class ResultTaskExtensions
     {
+        public static async Task<Result<TResult, TFailure>> MapSuccessAsync<TSuccess, TFailure, TResult>(
+            this Task<Result<TSuccess, TFailure>> self,
+            Func<TSuccess, Task<TResult>> onSuccess)
+        {
+            var result = await self.ConfigureAwait(false);
+            return await result.Match(
+                async s => Result.Success<TResult, TFailure>(await onSuccess(s).ConfigureAwait(false)),
+                f => Task.FromResult(Result.Failure<TResult, TFailure>(f))
+            ).ConfigureAwait(false);
+        }
+
         public static async Task<Result<TResult, TFailure>> AndThenAsync<TSuccess, TFailure, TResult>(
             this Task<Result<TSuccess, TFailure>> self, 
             Func<TSuccess, Task<Result<TResult, TFailure>>> onSuccess)
