@@ -21,10 +21,17 @@ namespace Zwyssigly.Functional
             Func<TSuccess, Task<Result<TResult, TFailure>>> onSuccess)
         {
             var result = await self.ConfigureAwait(false);
-            return await result.Match(
+            return await result.AndThenAsync(onSuccess).ConfigureAwait(false);
+        }
+
+        public static Task<Result<TResult, TFailure>> AndThenAsync<TSuccess, TFailure, TResult>(
+            this Result<TSuccess, TFailure> self,
+            Func<TSuccess, Task<Result<TResult, TFailure>>> onSuccess)
+        {
+            return self.Match(
                 s => onSuccess(s),
                 f => Task.FromResult<Result<TResult, TFailure>>(Result.Failure(f))
-            ).ConfigureAwait(false);
+            );
         }
 
         public static async Task<TResult> MatchAsync<TSuccess, TFailure, TResult>(

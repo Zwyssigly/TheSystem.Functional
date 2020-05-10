@@ -52,6 +52,20 @@ namespace Zwyssigly.Functional
                 failure => Result<TResult, TFailure>.FromFailure(failure));
         }
 
+        public Result<TSuccess, TResult> MapFailure<TResult>(Func<TFailure, TResult> onFailure)
+        {
+            return Match(
+                success => Result<TSuccess, TResult>.FromSuccess(success),
+                failure => Result<TSuccess, TResult>.FromFailure(onFailure(failure)));
+        }
+
+        public Result<TSuccessResult, TFailureResult> Map<TSuccessResult, TFailureResult>(Func<TSuccess, TSuccessResult> onSuccess, Func<TFailure, TFailureResult> onFailure)
+        {
+            return Match(
+                success => Result<TSuccessResult, TFailureResult>.FromSuccess(onSuccess(success)),
+                failure => Result<TSuccessResult, TFailureResult>.FromFailure(onFailure(failure)));
+        }
+
         public TSuccess UnwrapOrThrow()
         {
             return Match(success => success, failure => throw new UnwrapException(failure.ToString()));
