@@ -65,9 +65,9 @@ namespace Zwyssigly.Functional
 
         public void IfSome(Action<T> onSome) => Match(some2 => onSome(some2), () => { });
 
-        public Option<T> AndThen(Func<T, Option<T>> onSome)
+        public Option<TResult> AndThen<TResult>(Func<T, Option<TResult>> onSome)
         {
-            return Match(s => onSome(s), () => Option.None<T>());
+            return Match(s => onSome(s), () => Option.None<TResult>());
         }
     }
 
