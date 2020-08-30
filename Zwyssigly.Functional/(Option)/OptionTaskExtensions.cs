@@ -14,6 +14,13 @@ namespace Zwyssigly.Functional
                 () => Task.FromResult(Option.None<TResult>())).ConfigureAwait(false);
         }
 
+        public static async Task<Option<TResult>> AndThen<T, TResult>(
+            this Task<Option<T>> self, Func<T, Option<TResult>> onSome)
+        {
+            var option = await self.ConfigureAwait(false);
+            return option.AndThen(onSome);                
+        }
+
         public static Task<Option<TResult>> AndThenAsync<T, TResult>(
             this Option<T> self, Func<T, Task<Option<TResult>>> onSome)
         {
@@ -31,6 +38,13 @@ namespace Zwyssigly.Functional
                 () => onNone()).ConfigureAwait(false);
         }
 
+        public static async Task<TResult> Match<T, TResult>(
+            this Task<Option<T>> self, Func<T, TResult> onSome, Func<TResult> onNone)
+        {
+            var option = await self.ConfigureAwait(false);
+            return option.Match(onSome, onNone);
+        }
+
         public static async Task MatchAsync<T>(
             this Task<Option<T>> self, Func<T, Task> onSome, Func<Task> onNone)
         {
@@ -40,10 +54,23 @@ namespace Zwyssigly.Functional
                 () => onNone()).ConfigureAwait(false);
         }
 
+        public static async Task Match<T>(
+            this Task<Option<T>> self, Action<T> onSome, Action onNone)
+        {
+            var option = await self.ConfigureAwait(false);
+            option.Match(onSome, onNone);
+        }
+
         public static async Task IfSomeAsync<T>(this Task<Option<T>> self, Func<T, Task> onSome)
         {
             var option = await self.ConfigureAwait(false);
             await option.IfSomeAsync(onSome);
+        }
+
+        public static async Task IfSome<T>(this Task<Option<T>> self, Action<T> onSome)
+        {
+            var option = await self.ConfigureAwait(false);
+            option.IfSome(onSome);
         }
 
         public static Task IfSomeAsync<T>(this Option<T> self, Func<T, Task> onSome)
@@ -55,6 +82,12 @@ namespace Zwyssigly.Functional
         {
             var option = await self.ConfigureAwait(false);
             await option.IfNoneAsync(onNone);
+        }
+
+        public static async Task IfSome<T>(this Task<Option<T>> self, Action onNone)
+        {
+            var option = await self.ConfigureAwait(false);
+            option.IfNone(onNone);
         }
 
         public static Task IfNoneAsync<T>(this Option<T> self, Func<Task> onNone)

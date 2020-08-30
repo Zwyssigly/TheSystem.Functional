@@ -64,6 +64,7 @@ namespace Zwyssigly.Functional
         public override string ToString() => Match(some => some.ToString(), () => "[none]");
 
         public void IfSome(Action<T> onSome) => Match(some2 => onSome(some2), () => { });
+        public void IfNone(Action onNone) => Match(_ => { }, onNone);
 
         public Option<TResult> AndThen<TResult>(Func<T, Option<TResult>> onSome)
         {
