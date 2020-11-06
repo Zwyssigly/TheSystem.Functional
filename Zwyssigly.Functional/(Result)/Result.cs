@@ -76,6 +76,16 @@ namespace Zwyssigly.Functional
             return Match(success => success, failure => onFailure(failure));
         }
 
+        public TSuccess UnwrapOr(TSuccess failure)
+        {
+            return Match(success => success, _ => failure);
+        }
+
+        public TSuccess UnwrapOrDefault()
+        {
+            return Match(success => success, _ => default);
+        }
+
         public Result<TResult, TFailure> AndThen<TResult>(Func<TSuccess, Result<TResult, TFailure>> onSuccess)
         {
             return Match(s => onSuccess(s), f => Result<TResult, TFailure>.FromFailure(f));

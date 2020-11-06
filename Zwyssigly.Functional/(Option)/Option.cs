@@ -49,6 +49,8 @@ namespace Zwyssigly.Functional
 
         public T UnwrapOr(Func<T> onNone) => Match(some => some, () => onNone());
 
+        public T UnwrapOr(T none) => Match(some => some, () => none);
+
         public Option<T> OrThen(Func<Option<T>> onNone) => Match(Option.Some, onNone);
 
         public Option<TResult> Map<TResult>(Func<T, TResult> onSome) => Match(x => Option.Some(onSome(x)), () => Option.None());
@@ -62,6 +64,14 @@ namespace Zwyssigly.Functional
         public static implicit operator Option<T>(None _) => default;
 
         public override string ToString() => Match(some => some.ToString(), () => "[none]");
+
+        public Result<T, TFailure> ToResult<TFailure>(Func<TFailure> onNone)
+        {
+            return Match(
+                some => Result.Success<T, TFailure>(some), 
+                () => Result.Failure<T, TFailure>(onNone())
+            );
+        }
 
         public void IfSome(Action<T> onSome) => Match(some2 => onSome(some2), () => { });
         public void IfNone(Action onNone) => Match(_ => { }, onNone);
