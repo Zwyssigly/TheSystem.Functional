@@ -85,6 +85,19 @@ namespace Zwyssigly.Functional
         {
             return AndThen(s => s is TResult res ? Option.Some(res) : Option.None<TResult>());
         }
+
+        public override bool Equals(object obj)
+        {
+            if (_hasValue)
+                return obj is Option<T> opt && opt._hasValue && _value.Equals(opt._value);
+            else
+                return obj is IOption opt && opt.Match(o => false, () => true);
+        }
+
+        public override int GetHashCode() =>  _hasValue ? _value.GetHashCode() : 0; 
+
+        public static bool operator==(Option<T> a, Option<T> b) => a.Equals(b) is true;
+        public static bool operator!=(Option<T> a, Option<T> b) => !(a == b);
     }
 
     public static class Option

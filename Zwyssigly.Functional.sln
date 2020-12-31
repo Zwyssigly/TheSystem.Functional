@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29503.13
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zwyssigly.Functional", "Zwyssigly.Functional\Zwyssigly.Functional.csproj", "{6592406C-FFE5-4AB2-BE91-5EBFC3AB99D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zwyssigly.Functional.SystemTextJson", "Zwyssigly.Functional.SystemTextJson\Zwyssigly.Functional.SystemTextJson.csproj", "{A6D60B77-E5BA-4119-A153-13364FB13D00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zwyssigly.Functional.SystemTextJson", "Zwyssigly.Functional.SystemTextJson\Zwyssigly.Functional.SystemTextJson.csproj", "{A6D60B77-E5BA-4119-A153-13364FB13D00}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zwyssigly.Functional.Test", "Zwyssigly.Functional.Test\Zwyssigly.Functional.Test.csproj", "{CA33FE3D-B747-4365-9485-4C432C391C7E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{A6D60B77-E5BA-4119-A153-13364FB13D00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A6D60B77-E5BA-4119-A153-13364FB13D00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A6D60B77-E5BA-4119-A153-13364FB13D00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CA33FE3D-B747-4365-9485-4C432C391C7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CA33FE3D-B747-4365-9485-4C432C391C7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CA33FE3D-B747-4365-9485-4C432C391C7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CA33FE3D-B747-4365-9485-4C432C391C7E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

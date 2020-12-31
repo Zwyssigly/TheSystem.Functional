@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>Zwyssigly.Functional</RootNamespace>
     <LangVersion>8</LangVersion>
-    <Version>0.1.9</Version>
+    <Version>0.1.10</Version>
     <Authors>Zwyssigly</Authors>
     <Company />
     <Copyright>Apache License 2.0</Copyright>
