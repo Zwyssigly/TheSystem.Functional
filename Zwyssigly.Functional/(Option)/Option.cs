@@ -80,6 +80,11 @@ namespace Zwyssigly.Functional
         {
             return Match(s => onSome(s), () => Option.None<TResult>());
         }
+
+        public Option<TResult> CastOrNone<TResult>()
+        {
+            return AndThen(s => s is TResult res ? Option.Some(res) : Option.None<TResult>());
+        }
     }
 
     public static class Option

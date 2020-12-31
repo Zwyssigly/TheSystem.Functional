@@ -94,5 +94,10 @@ namespace Zwyssigly.Functional
         {
             return self.Match(_ => Task.FromResult(0), () => onNone());
         }
+
+        public static Task<Option<TResult>> CastOrNone<T, TResult>(this Task<Option<T>> self) 
+        {
+            return self.AndThen(s => s is TResult res ? Option.Some(res) : Option.None<TResult>());
+        }
     }
 }
