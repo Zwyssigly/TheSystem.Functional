@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Zwyssigly.Functional
@@ -21,6 +22,22 @@ namespace Zwyssigly.Functional
 
             foreach (var result in self)
             {
+                if (result.IsFailure)
+                    return result.MapSuccess<IReadOnlyList<TSuccess>>(_ => list);
+
+                result.IfSuccess(list.Add);
+            }
+
+            return Result.Success<IReadOnlyList<TSuccess>, TFailure>(list);
+        }
+
+        public static Result<IReadOnlyList<TSuccess>, TFailure> Railway<T, TSuccess, TFailure>(this IEnumerable<T> self, Func<T, Result<TSuccess, TFailure>> selector)
+        {
+            var list = new List<TSuccess>();
+
+            foreach (var item in self)
+            {
+                var result = selector(item);
                 if (result.IsFailure)
                     return result.MapSuccess<IReadOnlyList<TSuccess>>(_ => list);
 
